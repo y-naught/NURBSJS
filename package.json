@@ -1,0 +1,20 @@
+{
+  "name": "nurbsjs",
+  "version": "1.0.0",
+  "description": "Javascript geometry engine written in Typescript",
+  "main": "test.js",
+  "type": "module",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Greg King (Y-Naught Technologies)",
+  "license": "ISC",
+  "dependencies": {
+    "uuid": "^8.3.2"
+  },
+  "devDependencies": {
+    "@types/uuid": "^8.3.4",
+    "browserify": "^17.0.0",
+    "esmify": "^2.1.1"
+  }
+}
