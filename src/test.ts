@@ -8,8 +8,8 @@ import { Line } from "./line.js";
 function main() {
 
     //testPointVector();
-    //testSpline();
-    testLine();
+    testSpline();
+    //testLine();
 
 }
 

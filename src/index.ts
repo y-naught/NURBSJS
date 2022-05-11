@@ -3,20 +3,34 @@
 import {PointVector} from "./pointVector.js";
 import {Line} from "./line.js";
 import { Geometry } from "./geometry.js";
+import { Spline } from "./spline.js";
 
+
+let pt = new PointVector(0,0,0);
+let pt2 = new PointVector(0,500,0);
+let pt3 = new PointVector(500,500,0);
+let pt4 = new PointVector(500,0,0);
+let pt5 = new PointVector(0,0,0);
+
+let kts = [0,0,0,0.25,0.5,0.75,1,1,1];
+let pts = [pt, pt2, pt3, pt4, pt5];
+let wts = [0.875,0.875,0.875, 0.875, 0.875];
+let deg = 3;
 
 function main() {
     let canvas: HTMLCanvasElement = createCanvas();
     document.body.appendChild(canvas);
 
-    let lines: Line[] = generateLines(25, canvas.width, canvas.height);
+    //let lines: Line[] = generateLines(25, canvas.width, canvas.height);
+
+    let spline : Spline = createSpline(pts, wts, kts, deg);
 
     let geom: Geometry[] = new Array<Geometry>();
 
-    for(let i = 0; i < lines.length; i++){
-        geom.push(lines[i]);
-    }
-    
+    // for(let i = 0; i < lines.length; i++){
+    //     geom.push(lines[i]);
+    // }
+    geom.push(spline);
 
     writeFrame(canvas, geom);
 
@@ -35,6 +49,13 @@ function generateLines(numLines: number, wid: number, ht: number): Line[]{
         lines.push(_line);
     }
     return lines;
+}
+
+
+function createSpline(pt: PointVector[], wt : number[], kt : number[], deg : number){
+    let spline = new Spline(pt, kt, wt, deg);
+    return spline;
+    
 }
 
 // creates a line and returns the object to be called by a renderer
@@ -60,6 +81,7 @@ function writeFrame(canvas: HTMLCanvasElement, g: Geometry[]): void {
     for(let index = 0; index < g.length; index++){
         let tempPts: PointVector[] = g[index].render(1000);
         for(let i = 0; i< tempPts.length; i++){
+            //console.log(tempPts[i]);
             pointsToWrite.push(tempPts[i]);
         }
     }
@@ -70,7 +92,6 @@ function writeFrame(canvas: HTMLCanvasElement, g: Geometry[]): void {
     }
 
     context!.putImageData(imageData, 0, 0);
-
 }
 
 function createCanvas():HTMLCanvasElement {

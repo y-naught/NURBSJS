@@ -44,15 +44,71 @@ export class Spline extends Geometry {
         cs.drexel.edu/~david/Classes/CS430/Lectures/L-09_BSplines_NURBS.pdf
         
     */
-    evaluate(t: number): number {
+    evaluate(t: number): PointVector {
         // temporary, input evaluate proedure here...
         let tempVal: number = t;
         //evalulate the point on the curve given the value passed in on the curve domain
 
-        let closestKnotIndex = this.getClosestKnotIndex(t);
+        //padding the knot vector if necessary
+        if(this.knots.length < this.points.length + this.degree + 1){
+            let numShort = (this.points.length + this.degree + 1) - this.knots.length;
+            for(let i = 0; i < numShort; i++){
+                this.knots.push(this.knots[this.knots.length-1]);
+            }
+        }
 
+        //let closestKnotIndex = this.getClosestKnotIndex(t);
+        let domain = [
+            this.degree,
+            (this.knots.length - 1) - this.degree
+        ];
 
-        return closestKnotIndex;
+        let lowVal = this.knots[domain[0]];
+        let highVal =  this.knots[domain[1]];
+        
+        t = t * (highVal - lowVal) + lowVal;
+        //console.log(t);
+
+        // the starting segment we are evaluating in between
+        let s : number;
+
+        for(s = domain[0]; s < domain[1]; s++){
+            if(t >= this.knots[s] && t <= this.knots[s+1]) {
+                break;
+            }
+        }
+
+        // converting to our homogenous coordinates system
+        let v : number[][];
+        v = [];
+        for(let i = 0; i < this.points.length; i++){
+            v[i] = [];
+            //assumes we are working in 3 dimensions
+            v[i][0] = this.points[i].value[0] * this.weights[i];
+            v[i][1] = this.points[i].value[1] * this.weights[i];
+            v[i][2] = this.points[i].value[2] * this.weights[i];
+            v[i][3] = this.weights[i];
+        }
+
+        //some homoogennous coordinates witchcraft
+        let alpha : number;
+        for(let l = 1; l <= this.degree+1; l++){
+            for(let i = s; i > s-this.degree-1+l; i--){
+                alpha = (t - this.knots[i]) / (this.knots[this.degree + i + 1 - l] - this.knots[i]);
+                
+                for(let j = 0; j < 4; j++){
+                    v[i][j] = (1 - alpha) * v[i-1][j] + alpha * v[i][j];
+                }
+            } 
+        }
+
+        let res : PointVector;
+        let tempX : number = v[s][0] / v[s][3];
+        let tempY : number = v[s][1] / v[s][3];
+        let tempZ : number = v[s][2] / v[s][3];
+        
+        res = new PointVector(tempX, tempY, tempZ);
+        return res;
     }
 
     getClosestKnotIndex(_t: number): number {
@@ -78,6 +134,16 @@ export class Spline extends Geometry {
         }else {
             return false;
         }
+    }
+
+    render(samples: number): PointVector[]{
+        let pts: PointVector[] = new Array<PointVector>();
+        for(let i = 0; i < samples + 1; i++){
+            let _t = i / samples;
+            //console.log(_t);
+            pts.push(this.evaluate(_t));
+        }
+        return pts;
     }
 
 

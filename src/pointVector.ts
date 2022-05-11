@@ -25,6 +25,7 @@ export class PointVector extends Geometry{
     getY(): number {
         return Math.round(this.value[1]);
     }
+    
 
     // constructs matrix and applies a translation transformation to a pointVector
     translate(_v: PointVector) {
