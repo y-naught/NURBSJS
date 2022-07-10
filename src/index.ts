@@ -4,18 +4,23 @@ import {PointVector} from "./pointVector.js";
 import {Line} from "./line.js";
 import { Geometry } from "./geometry.js";
 import { Spline } from "./spline.js";
+//import {newSpline} from './newSpline.js';
 
+let pt = new PointVector(1,1,0);
+let pt2 = new PointVector(1,250,0);
+let pt3 = new PointVector(1,500,0);
+let pt4 = new PointVector(250, 500,0);
+let pt5 = new PointVector(500,500,0);
+let pt6 = new PointVector(500,250,0);
+let pt7 = new PointVector(500,1,0);
+let pt8 = new PointVector(250,1,0);
+let pt9 = new PointVector(1,1,0);
 
-let pt = new PointVector(0,0,0);
-let pt2 = new PointVector(0,500,0);
-let pt3 = new PointVector(500,500,0);
-let pt4 = new PointVector(500,0,0);
-let pt5 = new PointVector(0,0,0);
-
-let kts = [0,0,0,0.25,0.5,0.75,1,1,1];
-let pts = [pt, pt2, pt3, pt4, pt5];
-let wts = [0.875,0.875,0.875, 0.875, 0.875];
-let deg = 3;
+//let kts = [0,0,0,0,1,1,1,1,1];
+let kts = [0, 0, 0, 0.25, 0.25, 0.5, 0.5, 0.75, 0.75, 1.0, 1.0, 1.0];
+let pts = [pt, pt2, pt3, pt4, pt5, pt6, pt7, pt8, pt9];
+let wts = [1.0,0.707107,1,0.707107,1,0.707107,1,0.707107,1.0];
+let deg = 2;
 
 function main() {
     let canvas: HTMLCanvasElement = createCanvas();
@@ -24,6 +29,7 @@ function main() {
     //let lines: Line[] = generateLines(25, canvas.width, canvas.height);
 
     let spline : Spline = createSpline(pts, wts, kts, deg);
+    
 
     let geom: Geometry[] = new Array<Geometry>();
 
@@ -79,7 +85,7 @@ function writeFrame(canvas: HTMLCanvasElement, g: Geometry[]): void {
     let pointsToWrite: PointVector[] = new Array<PointVector>();
 
     for(let index = 0; index < g.length; index++){
-        let tempPts: PointVector[] = g[index].render(1000);
+        let tempPts: PointVector[] = g[index].render(1000.0);
         for(let i = 0; i< tempPts.length; i++){
             //console.log(tempPts[i]);
             pointsToWrite.push(tempPts[i]);

@@ -4,8 +4,35 @@
 export class UI {
 
     canvas: unknown;
+    cmd : CommandLine;
+
 
     constructor(){
         console.log("creating the UI object");
+        this.cmd = new CommandLine();
     }
 }
+
+//The command line that allows us to interact with the geometry engine
+class CommandLine{
+
+    input : String;
+
+    constructor(){
+        console.log("generating Command Line");
+        this.input = "";
+    }
+
+
+}
+
+// A UI element for us to accumulate tabs (defined below)
+class SidePanel{
+
+}
+
+// A tab that allows us to manipulate layers
+class LayerTab{
+
+}
+
