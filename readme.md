@@ -42,7 +42,7 @@ The basic structure of the application is a derivative of the Model-View-Control
 
 
 
-![Basic Diagram](./images/Basic_structure.png)
+![Basic Diagram](./images/Basic_Structure.png)
 
 
 
