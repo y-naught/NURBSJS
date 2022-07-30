@@ -4,7 +4,7 @@ import {PointVector} from "./pointVector.js";
 import {Line} from "./line.js";
 import { Geometry } from "./geometry.js";
 import { Spline } from "./spline.js";
-//import {newSpline} from './newSpline.js';
+
 
 let pt = new PointVector(1,1,0);
 let pt2 = new PointVector(1,250,0);

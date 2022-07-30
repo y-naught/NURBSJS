@@ -33,6 +33,6 @@ class SidePanel{
 
 // A tab that allows us to manipulate layers
 class LayerTab{
-
+    
 }
 
