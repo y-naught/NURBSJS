@@ -14,7 +14,7 @@ NURBS.js will be designed to act as a backend interface to abstract all of the n
 
 ---
 
-"Why would someone try to take on building what is essentially a CAD software for the browser, when there are already so many to choose from?", you might ask. The answer to that question has a few facets, but the primary reason is that I believe there needs to be a CAD software that is fully open source. 
+"Why would someone try to take on building what is essentially a CAD software for the browser, when there are already so many to choose from?" you might ask. The answer to that question has a few facets, but the primary reason is that I believe there needs to be a CAD software that is fully open source. 
 
 Currently, there are many CAD softwares on the market for a variety of customers. You have the AutoDesk suite for the architects and builders, you have Fusion 360 and Rhino for the makers, you have SolidWorks for the engineers, you have softwares like Maya and Cinema4D for the motion graphics and animation artists, etc. All of those examples fall into three categories. They are either already astronomically expensive to use, they require a subscription model, or in the near term will be going to a subscription service.
 
@@ -66,7 +66,7 @@ This software is currently compiled using the typescript compiler and then made 
 
 ### Compiling
 
-If you have not done so already install the node packages used in the system.
+If you have not done so already, install the node packages used in the system.
 
 ```bash
 npm install
@@ -90,7 +90,7 @@ You can then run a local server to serve the index.html page to the browser.
 
 ### Extending the system
 
-Currently, the project is in it's prototype phase, but if you want to play with the system and the renderer that are currently build in, you can modify the index.ts file to draw new 2D shapes on the canvas. 
+Currently, the project is in its prototype phase, but if you want to play with the system and the renderer that are currently built in, you can modify the index.ts file to draw new 2D shapes on the canvas. 
 
 As we move forward, this functionality will get moved to a User Interface that will be served and you will be able to access the NURBS.js API via an in-window command line.
 
