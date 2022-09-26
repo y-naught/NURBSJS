@@ -7,8 +7,6 @@
 import {Geometry} from './geometry.js';
 import {ScaleMatrix, TranslationMatrix} from './matrixUtils.js';
 
-
-
 export class PointVector extends Geometry{
 
     value: number[];

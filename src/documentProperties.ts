@@ -3,9 +3,28 @@
 
 export class Properties {
 
-    units: string;
+    units: String;
+    grid : number[];
     
     constructor(){
         this.units = "inches";
+        //num of minor grid lines, how many until a major grid line
+        this.grid = [100, 10];
+    }
+
+    getUnits() : String {
+        return this.units;
+    }
+
+    getGrid() : number[] {
+        return this.grid;
+    }
+
+    setUnits(_units : String){
+        this.units = _units;
+    }
+
+    setGrid(major : number, minor : number){
+        this.grid = [major, minor];
     }
 }
