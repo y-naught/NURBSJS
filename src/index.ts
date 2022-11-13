@@ -4,6 +4,10 @@ import {PointVector} from "./pointVector.js";
 import {Line} from "./line.js";
 import { Geometry } from "./geometry.js";
 import { Spline } from "./spline.js";
+import { UI } from "./ui.js"
+
+let geom: Geometry[] = new Array<Geometry>();
+let ui = constructUI();
 
 
 let pt = new PointVector(1,1,0);
@@ -20,26 +24,31 @@ let pt9 = new PointVector(1,1,0);
 let kts = [0, 0, 0, 0.25, 0.25, 0.5, 0.5, 0.75, 0.75, 1.0, 1.0, 1.0];
 let pts = [pt, pt2, pt3, pt4, pt5, pt6, pt7, pt8, pt9];
 let wts = [1.0,0.707107,1,0.707107,1,0.707107,1,0.707107,1.0];
-let deg = 2;
+let deg = 4;
 
 function main() {
-    let canvas: HTMLCanvasElement = createCanvas();
-    document.body.appendChild(canvas);
+    
+
+    document.body.appendChild(ui.getCMDOutputContainer());
+    document.body.appendChild(ui.getCMDContainer());
+    document.body.appendChild(ui.getCanvas());
+    document.body.appendChild(ui.getStatusContainer());
+    
 
     //let lines: Line[] = generateLines(25, canvas.width, canvas.height);
 
     let spline : Spline = createSpline(pts, wts, kts, deg);
     
-
-    let geom: Geometry[] = new Array<Geometry>();
+    ui.setCanvasSize();
+    
 
     // for(let i = 0; i < lines.length; i++){
     //     geom.push(lines[i]);
     // }
-    geom.push(spline);
+    //geom.push(spline);
 
-    writeFrame(canvas, geom);
-
+    writeFrame(ui, geom);
+    
 }
 
 function generateLines(numLines: number, wid: number, ht: number): Line[]{
@@ -76,11 +85,22 @@ function createPoint(x: number, y: number): PointVector{
     return pt;
 }
 
+export function addGeometry(g : Geometry){
+    geom.push(g);
+}
 
-function writeFrame(canvas: HTMLCanvasElement, g: Geometry[]): void {
-    let context = canvas.getContext('2d');
+export function printGeom(){
+    for(let i = 0; i < geom.length; i++){
+        console.log(geom[i]);
+        }
+}
 
-    let imageData = context!.getImageData(0,0,canvas.width, canvas.height);
+
+
+function writeFrame(ui: UI, g: Geometry[]): void {
+    let context = ui.getCanvasContext()
+
+    let imageData = context!.getImageData(0,0,ui.getCanvas().width, ui.getCanvas().height);
 
     let pointsToWrite: PointVector[] = new Array<PointVector>();
 
@@ -93,19 +113,21 @@ function writeFrame(canvas: HTMLCanvasElement, g: Geometry[]): void {
     }
 
     for(let i = 0; i < pointsToWrite.length; i++){
-        let px = pixelLocation(pointsToWrite[i], canvas.width, canvas.height);
+        let px = pixelLocation(pointsToWrite[i], ui.getCanvas().width, ui.getCanvas().height);
         setPixelToBlack(px, imageData);
     }
 
     context!.putImageData(imageData, 0, 0);
 }
 
-function createCanvas():HTMLCanvasElement {
-    let canvas: HTMLCanvasElement = document.createElement("CANVAS") as HTMLCanvasElement;
-    canvas.setAttribute("width", "1000");
-    canvas.setAttribute("height", "1000");
-    canvas.setAttribute("id", "viewport");
-    return canvas;
+export function updateFrame() : void {
+    writeFrame(ui, geom);
+}
+
+
+function constructUI() : UI {
+    let _UI = new UI();
+    return _UI;
 }
 
 function setPixelToBlack(loc: number, imageData: ImageData): void {

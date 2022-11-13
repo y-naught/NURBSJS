@@ -1,0 +1,49 @@
+body {
+    background-color: black;
+    margin: 0;
+}
+
+#viewport{
+    background-color: white;
+}
+
+#cmdOutContainer{
+    height: 100px;
+    width: auto;
+    overflow: scroll;
+    padding: 10px;
+}
+
+.cmdOutText{
+    color: white;
+    font-size: 10pt;
+}
+
+#cmdLineContainer{
+    width: auto;
+    padding: 5px;
+}
+
+#cmdLineInput{
+    width: 90vw;
+    margin: 0;
+}
+
+#StatusBarContainer{
+    width: 100vw;
+    height: auto;
+    display: flex;
+    flex-direction: row;
+    justify-content: left;
+    margin-top: 0;
+    margin-bottom: 0;
+}
+
+.statusText{
+    text-align: center;
+    justify-content: center;
+    margin-left: 5px;
+    margin-right: 5px;
+    font-size: 10pt;
+    color: white;
+}
