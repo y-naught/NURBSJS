@@ -10,21 +10,32 @@ let geom: Geometry[] = new Array<Geometry>();
 let ui = constructUI();
 
 
-let pt = new PointVector(1,1,0);
-let pt2 = new PointVector(1,250,0);
-let pt3 = new PointVector(1,500,0);
+// let pt = new PointVector(0,0,0);
+// let pt2 = new PointVector(0,0.5,0);
+// let pt3 = new PointVector(0,1.0,0);
+// let pt4 = new PointVector(0.5, 1.0,0);
+// let pt5 = new PointVector(1.0,1,0);
+// let pt6 = new PointVector(1.0,0.5,0);
+// let pt7 = new PointVector(1.0,0,0);
+// let pt8 = new PointVector(0.5,0,0);
+// let pt9 = new PointVector(0,0,0);
+
+let pt = new PointVector(0,250,0);
+let pt2 = new PointVector(0,250,0);
+let pt3 = new PointVector(0,500,0);
 let pt4 = new PointVector(250, 500,0);
 let pt5 = new PointVector(500,500,0);
 let pt6 = new PointVector(500,250,0);
-let pt7 = new PointVector(500,1,0);
-let pt8 = new PointVector(250,1,0);
-let pt9 = new PointVector(1,1,0);
+let pt7 = new PointVector(500,0,0);
+let pt8 = new PointVector(250,0,0);
+let pt9 = new PointVector(0,0,0);
 
 //let kts = [0,0,0,0,1,1,1,1,1];
-let kts = [0, 0, 0, 0.25, 0.25, 0.5, 0.5, 0.75, 0.75, 1.0, 1.0, 1.0];
-let pts = [pt, pt2, pt3, pt4, pt5, pt6, pt7, pt8, pt9];
+//let kts = [0,1,2,3,4,5,6,7,8,9,10,11,12];
+let kts = [0,0,0,0.25,0.25,0.5,0.5,0.75,0.75,1,1,1];
+let pts = [pt2, pt3, pt4, pt5, pt6, pt7, pt8, pt9, pt];
 let wts = [1.0,0.707107,1,0.707107,1,0.707107,1,0.707107,1.0];
-let deg = 4;
+let deg = 2;
 
 function main() {
     
@@ -37,15 +48,19 @@ function main() {
 
     //let lines: Line[] = generateLines(25, canvas.width, canvas.height);
 
-    let spline : Spline = createSpline(pts, wts, kts, deg);
-    
+    let spline : Spline = createSpline(pts, kts, wts, deg);
+
+    let moveVector = new PointVector(50, 50,0);
+    spline.translate(moveVector);
+    spline.scale(1.2);
+
     ui.setCanvasSize();
     
 
     // for(let i = 0; i < lines.length; i++){
     //     geom.push(lines[i]);
     // }
-    //geom.push(spline);
+    geom.push(spline);
 
     writeFrame(ui, geom);
     
@@ -67,11 +82,10 @@ function generateLines(numLines: number, wid: number, ht: number): Line[]{
 }
 
 
-function createSpline(pt: PointVector[], wt : number[], kt : number[], deg : number){
+function createSpline(pt: PointVector[], kt : number[], wt : number[], deg : number){
     let spline = new Spline(pt, kt, wt, deg);
     return spline;
-    
-}
+} 
 
 // creates a line and returns the object to be called by a renderer
 function createLine(s: PointVector, e: PointVector): Line {

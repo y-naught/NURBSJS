@@ -4,7 +4,7 @@
 import {File, saveFile, saveFileAs} from './file';
 import { PointVector } from './pointVector.js';
 import { Line } from './line.js';
-import {Command, LineCommand} from './command.js'
+import {CircleCNRCommand, Command, LineCommand} from './command.js'
 import { updateFrame, printGeom } from '.';
 import { Geometry } from './geometry';
 
@@ -202,7 +202,6 @@ export class CommandLine{
                         this.command = null;
                     }
                 }
-                
             
                 //try and run a command if they press enter
                 if(event.key === "Enter" || event.key === "NumpadEnter"){
@@ -244,6 +243,10 @@ export class CommandLine{
             this.command = new LineCommand(this, this.output);
         }else if(userInputLower == "printgeom"){
             printGeom();
+        }else if(userInputLower == "circle"){
+            let msg : String = "Starting the circle command";
+            this.output.append(msg);
+            this.command = new CircleCNRCommand(this, this.output);
         }
         else{
             let msg : String = "Command : \"" + userInput + "\" isn't recognized";

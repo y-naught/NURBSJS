@@ -66,6 +66,9 @@ export class Spline extends Geometry {
         let lowVal = this.knots[domain[0]];
         let highVal =  this.knots[domain[1]];
         
+        console.log("lowVal : ", lowVal);
+        console.log("highVal : ", highVal);
+
         tempVal = tempVal * (highVal - lowVal) + lowVal;
         console.log(`t : ${tempVal}`);
 
@@ -78,6 +81,8 @@ export class Spline extends Geometry {
             }
         }
 
+        console.log("s : ", s);
+
         // converting to our homogenous coordinates system
         let v;
         v = new Array<number[]>(4);
@@ -89,6 +94,7 @@ export class Spline extends Geometry {
             v[i][2] = this.points[i].value[2] * this.weights[i];
             v[i][3] = this.weights[i];
         }
+
         //some homoogennous coordinates witchcraft
         let alpha : number;
         for(let l = 1; l <= this.degree+1; l++){
@@ -106,6 +112,7 @@ export class Spline extends Geometry {
         let tempZ : number = v[s][2] / v[s][3];
         
         res = new PointVector(tempX, tempY, tempZ);
+        console.log(tempX,", ", tempY)
         return res;
     }
 
@@ -134,15 +141,26 @@ export class Spline extends Geometry {
         }
     }
 
+    translate(_v : PointVector){
+        for(let i = 0; i < this.points.length; i++){
+            this.points[i].translate(_v);
+        }
+    }
+
+    scale(factor : number){
+        for(let i = 0; i < this.points.length; i++){
+            this.points[i].scale(factor);
+        }
+    }
+
     render(samples: number): PointVector[]{
         let pts: PointVector[] = new Array<PointVector>();
         for(let i = 0; i < samples + 1; i++){
             let _t = i / samples;
             //console.log(_t);
             pts.push(this.evaluate(_t));
+            
         }
         return pts;
     }
-
-
 }
