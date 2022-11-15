@@ -15,6 +15,8 @@ export class UI {
     cmdOutput : CommandLineOutput;
     statusBar : StatusBar;
     mousePos : number[];
+    mousePosStart : number[];
+    isDragging : true;
 
 
     constructor(){
@@ -27,6 +29,7 @@ export class UI {
         this.mousePos = [0,0];
         this.setCanvasMouseListeners();
         this.setResizeListener();
+        this.setCanvasRightClickListener();
     }
 
     getCanvasContext(){
@@ -100,6 +103,12 @@ export class UI {
         window.addEventListener('resize', (event) => {
             this.setCanvasSize();
         }, true)
+    }
+
+    setCanvasRightClickListener(){
+        this.canvas.addEventListener('contextmenu', (event) => {
+            event.preventDefault();
+        })
     }
 }
 

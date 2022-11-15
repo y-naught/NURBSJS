@@ -5,20 +5,14 @@ import {Line} from "./line.js";
 import { Geometry } from "./geometry.js";
 import { Spline } from "./spline.js";
 import { UI } from "./ui.js"
+import { Renderer } from "./renderer.js";
+import { Camera2D } from "./camera.js";
 
 let geom: Geometry[] = new Array<Geometry>();
 let ui = constructUI();
+let renderer = new Renderer();
+let camera = new Camera2D();
 
-
-// let pt = new PointVector(0,0,0);
-// let pt2 = new PointVector(0,0.5,0);
-// let pt3 = new PointVector(0,1.0,0);
-// let pt4 = new PointVector(0.5, 1.0,0);
-// let pt5 = new PointVector(1.0,1,0);
-// let pt6 = new PointVector(1.0,0.5,0);
-// let pt7 = new PointVector(1.0,0,0);
-// let pt8 = new PointVector(0.5,0,0);
-// let pt9 = new PointVector(0,0,0);
 
 let pt = new PointVector(0,250,0);
 let pt2 = new PointVector(0,250,0);
@@ -39,7 +33,7 @@ let deg = 2;
 
 function main() {
     
-
+    // Where we construct out webpage components from
     document.body.appendChild(ui.getCMDOutputContainer());
     document.body.appendChild(ui.getCMDContainer());
     document.body.appendChild(ui.getCanvas());
@@ -49,7 +43,6 @@ function main() {
     //let lines: Line[] = generateLines(25, canvas.width, canvas.height);
 
     let spline : Spline = createSpline(pts, kts, wts, deg);
-
     let moveVector = new PointVector(50, 50,0);
     spline.translate(moveVector);
     spline.scale(1.2);
@@ -61,11 +54,12 @@ function main() {
     //     geom.push(lines[i]);
     // }
     geom.push(spline);
-
-    writeFrame(ui, geom);
-    
+    renderer.writeFrame(ui, geom, camera);
 }
 
+
+
+//**** Utility functions for testing or convienence ***********/
 function generateLines(numLines: number, wid: number, ht: number): Line[]{
     let lines: Line[] = new Array<Line>();
     for(let i = 0; i < numLines; i++){
@@ -99,6 +93,13 @@ function createPoint(x: number, y: number): PointVector{
     return pt;
 }
 
+function constructUI() : UI {
+    let _UI = new UI();
+    return _UI;
+}
+
+
+// Access functions for the UI or command line manager to call
 export function addGeometry(g : Geometry){
     geom.push(g);
 }
@@ -109,53 +110,10 @@ export function printGeom(){
         }
 }
 
-
-
-function writeFrame(ui: UI, g: Geometry[]): void {
-    let context = ui.getCanvasContext()
-
-    let imageData = context!.getImageData(0,0,ui.getCanvas().width, ui.getCanvas().height);
-
-    let pointsToWrite: PointVector[] = new Array<PointVector>();
-
-    for(let index = 0; index < g.length; index++){
-        let tempPts: PointVector[] = g[index].render(1000.0);
-        for(let i = 0; i< tempPts.length; i++){
-            //console.log(tempPts[i]);
-            pointsToWrite.push(tempPts[i]);
-        }
-    }
-
-    for(let i = 0; i < pointsToWrite.length; i++){
-        let px = pixelLocation(pointsToWrite[i], ui.getCanvas().width, ui.getCanvas().height);
-        setPixelToBlack(px, imageData);
-    }
-
-    context!.putImageData(imageData, 0, 0);
-}
-
 export function updateFrame() : void {
-    writeFrame(ui, geom);
+    renderer.writeFrame(ui, geom, camera);
 }
 
 
-function constructUI() : UI {
-    let _UI = new UI();
-    return _UI;
-}
-
-function setPixelToBlack(loc: number, imageData: ImageData): void {
-    imageData.data[loc  ] = 0;
-    imageData.data[loc+1] = 0;
-    imageData.data[loc+2] = 0;
-    imageData.data[loc+3] = 255;
-}
-
-
-// function to return the index of the pixel you are looking to set
-// by default the array is 1D - this is our 2D to 1D translation
-function pixelLocation(pt: PointVector, w: number, h:number): number{
-    return (pt.getY() * w * 4) + (pt.getX() * 4);
-}
 
 main();

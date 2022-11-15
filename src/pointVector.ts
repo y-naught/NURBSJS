@@ -41,6 +41,12 @@ export class PointVector extends Geometry{
         this.value = newCoordinates;
     }
 
+    scaleVector(scaleVector : PointVector) : void{
+        let tempMatrix : ScaleMatrix = new ScaleMatrix(scaleVector);
+        let newCoordinates : number[] = tempMatrix.multiply(this);
+        this.value = newCoordinates;
+    }
+
     // adds two pointvectors together
     add(_v: PointVector): void {
         let tempNumbers: number[] = 
