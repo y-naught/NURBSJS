@@ -12,6 +12,7 @@ let geom: Geometry[] = new Array<Geometry>();
 let ui = constructUI();
 let renderer = new Renderer();
 let camera = new Camera2D();
+ui.attachCamera(camera);
 
 
 let pt = new PointVector(0,250,0);

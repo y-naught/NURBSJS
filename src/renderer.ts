@@ -20,7 +20,7 @@ export class Renderer{
     // of the renderer increases
     writeFrame(ui : UI, g: Geometry[], cam : Camera2D){
         let context = ui.getCanvasContext()
-
+        this.clearCanvas(context, ui);
         let imageData = context!.getImageData(0,0,ui.getCanvas().width, ui.getCanvas().height);
 
         // Where we apply renders
@@ -28,6 +28,10 @@ export class Renderer{
         this.renderGeometry(imageData, g, ui, cam);
 
         context!.putImageData(imageData, 0, 0);
+    }
+
+    clearCanvas(ctx : CanvasRenderingContext2D, ui : UI){
+        ctx.clearRect(0,0, ui.getCanvas().width, ui.getCanvas().height);
     }
 
     drawAxes(img : ImageData, cam : Camera2D, ui : UI){
@@ -67,14 +71,21 @@ export class Renderer{
     renderGeometry(img : ImageData, g: Geometry[], ui:  UI, cam : Camera2D){
         let pointsToWrite: PointVector[] = new Array<PointVector>();
         let scaleVector = cam.getScaleVector();
+        let bounds : number[] = cam.getBounds(ui);
         let traslationVector = cam.getRenderTranslation(ui);
 
         for(let index = 0; index < g.length; index++){
             let tempPts: PointVector[] = g[index].render(1000.0);
             for(let i = 0; i< tempPts.length; i++){
+                
+                if(tempPts[i].inBounds(bounds)){
+                    tempPts[i].scaleVector(scaleVector);
+                    let point : PointVector = tempPts[i].addUtil(traslationVector);
+                    pointsToWrite.push(point);
+                }
                 //console.log(tempPts[i]);
-                tempPts[i].scaleVector(scaleVector);
-                pointsToWrite.push(tempPts[i].addUtil(traslationVector));
+                
+                
             }
         }
 

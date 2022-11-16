@@ -48,7 +48,7 @@ export class Spline extends Geometry {
         // temporary, input evaluate proedure here...
         let tempVal: number = t;
         //evalulate the point on the curve given the value passed in on the curve domain
-        console.log(t);
+        //console.log(t);
         //padding the knot vector if necessary
         if(this.knots.length < this.points.length + this.degree + 1){
             let numShort = (this.points.length + this.degree + 1) - this.knots.length;
@@ -66,11 +66,11 @@ export class Spline extends Geometry {
         let lowVal = this.knots[domain[0]];
         let highVal =  this.knots[domain[1]];
         
-        console.log("lowVal : ", lowVal);
-        console.log("highVal : ", highVal);
+        //console.log("lowVal : ", lowVal);
+        //console.log("highVal : ", highVal);
 
         tempVal = tempVal * (highVal - lowVal) + lowVal;
-        console.log(`t : ${tempVal}`);
+        //console.log(`t : ${tempVal}`);
 
         // the starting segment we are evaluating in between
         let s : number;
@@ -81,7 +81,7 @@ export class Spline extends Geometry {
             }
         }
 
-        console.log("s : ", s);
+        //console.log("s : ", s);
 
         // converting to our homogenous coordinates system
         let v;
@@ -112,7 +112,7 @@ export class Spline extends Geometry {
         let tempZ : number = v[s][2] / v[s][3];
         
         res = new PointVector(tempX, tempY, tempZ);
-        console.log(tempX,", ", tempY)
+        //console.log(tempX,", ", tempY)
         return res;
     }
 

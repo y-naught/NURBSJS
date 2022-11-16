@@ -7,6 +7,7 @@ import { Line } from './line.js';
 import {CircleCNRCommand, Command, LineCommand} from './command.js'
 import { updateFrame, printGeom } from '.';
 import { Geometry } from './geometry';
+import {Camera2D} from './camera';
 
 export class UI {
 
@@ -16,12 +17,15 @@ export class UI {
     statusBar : StatusBar;
     mousePos : number[];
     mousePosStart : number[];
-    isDragging : true;
+    isDragging : boolean = true;
+    mouseRightDown : boolean = false;
+    mouseLeftDown : boolean = false;
+    mouseMidDown : boolean = false;
+    camera : Camera2D;
 
 
     constructor(){
         console.log("creating the UI object");
-        
         this.cmdOutput = new CommandLineOutput();
         this.cmd = new CommandLine(this.cmdOutput);
         this.canvas = this.createCanvas();
@@ -67,6 +71,66 @@ export class UI {
             this.statusBar.setXCoordinate(this.mousePos[0]);
             this.statusBar.setYCoordinate(this.mousePos[1]);
         })
+
+        this.canvas.addEventListener("mousedown", (event) => {
+            this.mousePosStart = this.getMousePosition(event);
+            switch(event.button){
+                case 0:
+                    // left mouse button
+                    this.mouseLeftDown = true;
+                    break;
+                case 1:
+                    // middle mouse button
+                    this.mouseMidDown = true;
+                    break;
+                default:
+                    // right mouse button:
+                    console.log("mouse right down!")
+                    
+                    this.mouseRightDown = true;
+                    this.camera.startMove();
+            }
+        })
+
+        this.canvas.addEventListener("mouseup", (event) => {
+            //this.mousePosStart = this.getMousePosition(event);
+            switch(event.button){
+                case 0:
+                    // left mouse button
+                    this.mouseLeftDown = false;
+                    break;
+                case 1:
+                    // middle mouse button
+                    this.mouseMidDown = false;
+                    break;
+                default:
+                    // right mouse button:
+                    console.log("mouse Right up!")
+                    this.mouseRightDown = false;
+                    this.camera.stopMove();
+            }
+        })
+
+        this.canvas.addEventListener("mousemove", (event) => {
+            
+            if(this.mouseLeftDown){
+
+            }
+            if(this.mouseRightDown){
+                console.log("dragging right!")
+               if(!this.camera){
+                  console.log("camera hasn't been attached");
+               }else{
+                 let moveVector = new PointVector(this.mousePos[0] - this.mousePosStart[0], this.mousePos[1] - this.mousePosStart[1], 0);
+                 this.camera.move(moveVector);
+                 this.updateCanvas();
+               }
+            }
+        })
+    }
+
+    attachCamera(cam:  Camera2D){
+        this.camera = cam;
     }
 
     getMousePosition(event : MouseEvent) : number[]{

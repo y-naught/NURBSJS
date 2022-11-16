@@ -121,4 +121,21 @@ export class PointVector extends Geometry{
         let tempZ = this.value[2] / mag;
         return new PointVector(tempX, tempY, tempZ);
     }
+
+    inBounds(bounds : number[]){
+        
+        console.log(this.value);
+        console.log("bounds : ")
+        console.log(bounds);
+
+        if(this.value[0] < (bounds[0]) || this.value[0] > (bounds[1])){
+            console.log("false on X!");
+            return false;
+        }else if(this.value[1] < bounds[2] || this.value[1] > bounds[3]){
+            console.log("false on Y!");
+            return false;
+        }else{
+            return true;
+        }
+    }
 }

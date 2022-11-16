@@ -17,6 +17,7 @@ export class Camera2D{
     constructor(){
 
         this.location = new PointVector(0,0,0);
+        this.locationTemp = new PointVector(0,0,0);
         this.focalLength = 35;
         this.pitch = 0;
         this.roll = 0;
@@ -34,8 +35,16 @@ export class Camera2D{
         let midX = _w / 2;
         let midY = _h / 2;
 
-        let x = midX + this.location.value[0];
-        let y = midY + this.location.value[1]; 
+        let x : number;
+        let y : number;
+
+        if(this.isMoving){
+            x = midX + this.locationTemp.value[0];
+            y = midY + this.locationTemp.value[1]; 
+        }else{
+            x = midX + this.location.value[0];
+            y = midY + this.location.value[1]; 
+        }
 
         return new PointVector(x, y, 0);
     }
@@ -48,11 +57,40 @@ export class Camera2D{
         let _w = ui.getCanvas().width;
         let _h = ui.getCanvas().height;
 
-        let xStart = this.location.value[0] - _w/2;
-        let xEnd = this.location.value[0] + _w/2;
-        let yStart = this.location.value[1] - _h/2;
-        let yEnd = this.location.value[1] + _h/2;
+        let xStart : number;
+        let xEnd : number;
+        let yStart : number;
+        let yEnd : number;
 
-        return [xStart, xEnd, yStart, yEnd]
+        if(this.isMoving){
+            xStart = -this.locationTemp.value[0] - _w/2;
+            xEnd = -this.locationTemp.value[0] + _w/2;
+            yStart = this.locationTemp.value[1] - _h/2;
+            yEnd = this.locationTemp.value[1] + _h/2;
+        }else{
+            xStart = -this.location.value[0] - _w/2;
+            xEnd = -this.location.value[0] + _w/2;
+            yStart = this.location.value[1] - _h/2;
+            yEnd = this.location.value[1] + _h/2;
+        }
+        console.log("this.location : ");
+        console.log(this.locationTemp.value);
+        console.log("_w :", _w);
+        console.log("_h :", _h);
+
+        let arr = [xStart, xEnd, yStart, yEnd];
+
+        //console.log(arr);
+
+        return arr;
+    }
+
+    startMove(){
+        this.isMoving = true;
+    }
+
+    stopMove(){
+        this.isMoving = false;
+        this.location = this.locationTemp;
     }
 }
