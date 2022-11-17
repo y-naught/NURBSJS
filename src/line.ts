@@ -47,5 +47,4 @@ export class Line extends Geometry {
     length(): number {
         return this.end.subtract(this.start).magnitude();
     }
-
 }

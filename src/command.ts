@@ -6,8 +6,9 @@ import {Line} from './line.js'
 import {CommandLine, CommandLineOutput} from './ui.js'
 import { addGeometry, updateFrame } from './index.js';
 import { Spline } from './spline.js';
+import { Rectangle } from './rectangle.js';
 
-export class Command{ 
+export class Command{
     cmdName : string;
     output : CommandLineOutput;
     input : CommandLine;
@@ -25,7 +26,6 @@ export class Command{
 
 export class LineCommand extends Command{
     
-    line : Line;
     startPt : PointVector;
     endPt : PointVector;
 
@@ -116,6 +116,39 @@ export class CircleCNRCommand extends Command{
     }
 
 }
+
+export class Rectangle2Command extends Command{
+
+    startPt : PointVector;
+    endPt : PointVector;
+
+    constructor(_in : CommandLine, _out : CommandLineOutput){
+        super(_in, _out, "rect2pt");
+        this.output.append("Enter Start Point for rectangle");
+    }
+
+    update(_in : String){
+        if(checkPointFormat(_in)){
+            let coords : number[] = deconstructPoint(_in);
+            this.output.append("Enter the coordinates for the opposite corner, format : x,y,z");
+            if(!this.startPt){
+                this.startPt = new PointVector(coords[0], coords[1], coords[2]);
+            }else{
+                this.endPt = new PointVector(coords[0], coords[1], coords[2]);
+                let rect = new Rectangle(this.startPt, this.endPt.value[0] - this.startPt.value[0], this.endPt.value[1] - this.startPt.value[1])
+                addGeometry(rect);
+                this.output.append("added rectangle");
+                updateFrame();
+                this.isComplete = true;
+            }
+        }else{
+            this.output.append("The format for your point isn't correct : x,y,z");
+        }
+    }
+}
+
+
+/******Utility functions ********/
 
 // user input validation checker for a point
 function checkPointFormat(_in : String) : boolean{

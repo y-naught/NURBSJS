@@ -4,10 +4,11 @@
 import {File, saveFile, saveFileAs} from './file';
 import { PointVector } from './pointVector.js';
 import { Line } from './line.js';
-import {CircleCNRCommand, Command, LineCommand} from './command.js'
+import {CircleCNRCommand, Command, LineCommand, Rectangle2Command} from './command.js'
 import { updateFrame, printGeom } from '.';
 import { Geometry } from './geometry';
 import {Camera2D} from './camera';
+
 
 export class UI {
 
@@ -17,12 +18,13 @@ export class UI {
     statusBar : StatusBar;
     mousePos : number[];
     mousePosStart : number[];
-    isDragging : boolean = true;
+    isDragging : boolean = false;
     mouseRightDown : boolean = false;
     mouseLeftDown : boolean = false;
     mouseMidDown : boolean = false;
     camera : Camera2D;
-
+    selectedGeometry : Geometry[];
+    selectionTolerance : number = 1;
 
     constructor(){
         console.log("creating the UI object");
@@ -78,6 +80,7 @@ export class UI {
                 case 0:
                     // left mouse button
                     this.mouseLeftDown = true;
+
                     break;
                 case 1:
                     // middle mouse button
@@ -98,6 +101,7 @@ export class UI {
                 case 0:
                     // left mouse button
                     this.mouseLeftDown = false;
+                    this.isDragging = false;
                     break;
                 case 1:
                     // middle mouse button
@@ -114,7 +118,7 @@ export class UI {
         this.canvas.addEventListener("mousemove", (event) => {
             
             if(this.mouseLeftDown){
-
+                this.isDragging = true;
             }
             if(this.mouseRightDown){
                 console.log("dragging right!")
@@ -161,6 +165,18 @@ export class UI {
         this.canvas.height = h - takenHeight;
 
         this.updateCanvas()
+    }
+
+    selectGeometry(){
+        if(this.isDragging){
+            // select anything within the rectangle of mousePosStart, mousePos
+        }else{
+            // selects anything within a tolerance of 
+        }
+        this.mousePosStart;
+        this.mousePos;
+        
+        
     }
 
     setResizeListener(){
@@ -320,6 +336,10 @@ export class CommandLine{
             let msg : String = "Starting the circle command";
             this.output.append(msg);
             this.command = new CircleCNRCommand(this, this.output);
+        }else if(userInputLower == "rectangle2"){
+            let msg : String = "Starting the rectangle command";
+            this.output.append(msg);
+            this.command = new Rectangle2Command(this, this.output);
         }
         else{
             let msg : String = "Command : \"" + userInput + "\" isn't recognized";
