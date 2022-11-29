@@ -5,7 +5,7 @@ import {File, saveFile, saveFileAs} from './file';
 import { PointVector } from './pointVector.js';
 import { Line } from './line.js';
 import {CircleCNRCommand, Command, LineCommand, Rectangle2Command} from './command.js'
-import { updateFrame, printGeom } from '.';
+import { updateFrame, printGeom, getGeometry  } from '.';
 import { Geometry } from './geometry';
 import {Camera2D} from './camera';
 
@@ -22,9 +22,11 @@ export class UI {
     mouseRightDown : boolean = false;
     mouseLeftDown : boolean = false;
     mouseMidDown : boolean = false;
+    shiftHeld : boolean = false;
     camera : Camera2D;
     selectedGeometry : Geometry[];
     selectionTolerance : number = 1;
+    
 
     constructor(){
         console.log("creating the UI object");
@@ -36,6 +38,7 @@ export class UI {
         this.setCanvasMouseListeners();
         this.setResizeListener();
         this.setCanvasRightClickListener();
+        this.setCanvasKeyListeners();
     }
 
     getCanvasContext(){
@@ -69,9 +72,11 @@ export class UI {
     setCanvasMouseListeners() : void{
         this.canvas.addEventListener("mousemove", (event) => {
             this.mousePos = this.getMousePosition(event);
-            //console.log(this.mousePos);
-            this.statusBar.setXCoordinate(this.mousePos[0]);
-            this.statusBar.setYCoordinate(this.mousePos[1]);
+            
+            let translatedPoint = this.camera.getRenderTranslation(this);
+
+            this.statusBar.setXCoordinate(this.mousePos[0] - translatedPoint.getX());
+            this.statusBar.setYCoordinate(translatedPoint.getY() - this.mousePos[1]);
         })
 
         this.canvas.addEventListener("mousedown", (event) => {
@@ -80,7 +85,6 @@ export class UI {
                 case 0:
                     // left mouse button
                     this.mouseLeftDown = true;
-
                     break;
                 case 1:
                     // middle mouse button
@@ -99,9 +103,46 @@ export class UI {
             //this.mousePosStart = this.getMousePosition(event);
             switch(event.button){
                 case 0:
-                    // left mouse button
+                    // left mouse button, select geometry
                     this.mouseLeftDown = false;
                     this.isDragging = false;
+            
+                    let translationVector = this.camera.getRenderTranslation(this);
+
+                    // check to see if the user tried to click on an object
+                    // create a point vector where the user clicked
+                    let clickPoint = new PointVector(this.mousePos[0] - translationVector.getX(), translationVector.getY() - this.mousePos[1], 0);
+
+                    let curGeometry = getGeometry();
+
+                    let closestIndex = -1;
+                    let closestDistance = 1000000;
+                    let clickTolerance = 10;
+                    // check the distance between the closest point of all the geometry objects
+                    for(let i = 0; i < curGeometry.length; i++){
+                        
+                        let pointInfo = curGeometry[i].closestPoint(clickPoint);
+                        let curDistance = pointInfo[0].distance(clickPoint);
+                        if(curDistance < closestDistance){
+                            closestIndex = i;
+                            closestDistance = curDistance;
+                        }
+                    }
+                    // if the closest one is within a click tolerance, mark the object as selected
+                    
+                    if(!this.shiftHeld){
+                        let _g = getGeometry();
+                        for(let i = 0; i < _g.length; i++){
+                            _g[i].setSelected(false);
+                        }
+                    }
+                    if (closestDistance < clickTolerance && closestIndex != -1){
+                        curGeometry[closestIndex].setSelected(true);
+                    }
+                    // update the frame
+                    updateFrame();
+
+
                     break;
                 case 1:
                     // middle mouse button
@@ -129,6 +170,25 @@ export class UI {
                  this.camera.move(moveVector);
                  this.updateCanvas();
                }
+            }
+        })
+    }
+
+    setCanvasKeyListeners(){
+        this.canvas.addEventListener("keydown", (event) => {
+            if(event.key == "Escape"){
+                let _g = getGeometry();
+                for(let i = 0; i < _g.length; i++){
+                    _g[i].setSelected(false);
+                }
+            }else if(event.key == "shift"){
+                this.shiftHeld = true;
+            }
+        })
+
+        this.canvas.addEventListener("keyup", (event) => {
+            if(event.key == "shift"){
+                this.shiftHeld = false;
             }
         })
     }
@@ -308,6 +368,13 @@ export class CommandLine{
                 else if(event.key == "Backspace"){
                     
                 }
+                else if(event.key == "Escape" || event.key == "esc"){
+                    let _g = getGeometry();
+                    for(let i = 0; i < _g.length; i++){
+                        _g[i].setSelected(false);
+                    }
+                    console.log("Selecting None");
+                }
                 //append key to the input variable
                 else{
                     this.input = this.textBox.value + event.key;
@@ -340,6 +407,14 @@ export class CommandLine{
             let msg : String = "Starting the rectangle command";
             this.output.append(msg);
             this.command = new Rectangle2Command(this, this.output);
+        }
+        else if(userInputLower = "selnone"){
+            let _g = getGeometry();
+            for(let i = 0; i < _g.length; i++){
+                _g[i].setSelected(false);
+            }
+            this.output.append("Selecting None");
+            updateFrame();
         }
         else{
             let msg : String = "Command : \"" + userInput + "\" isn't recognized";

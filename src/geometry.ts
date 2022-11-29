@@ -12,8 +12,10 @@ export class Geometry {
     
     id: unknown;
     layer: string;
+    selected : boolean;
     
     constructor () {
+        this.selected = false;
         this.id = uuidv4();
         this.layer = "default"
     }
@@ -22,6 +24,18 @@ export class Geometry {
     render(samples: number): PointVector[]{
         let arr: PointVector[] = new Array<PointVector>();
         return arr;
+    }
+
+    closestPoint(_pt) : [PointVector, number]{
+        return [new PointVector(0,0,0), -1];
+    }
+
+    setSelected(_val : boolean){
+        this.selected = _val;
+    }
+
+    isSelected() : boolean{
+        return this.selected;
     }
 }
 

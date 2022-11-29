@@ -9,10 +9,12 @@ export class Renderer{
 
     xAxisColor : ColorRGBA;
     yAxisColor : ColorRGBA;
+    selectedColor : ColorRGBA;
 
     constructor(){
         this.xAxisColor = new ColorRGBA(255,0,0,255);
         this.yAxisColor = new ColorRGBA(0,255,0,255);
+        this.selectedColor = new ColorRGBA(255,255,0, 255);
     }
 
     //writes a frame to canvas. 
@@ -76,22 +78,32 @@ export class Renderer{
 
         for(let index = 0; index < g.length; index++){
             let tempPts: PointVector[] = g[index].render(1000.0);
+            
             for(let i = 0; i< tempPts.length; i++){
                 
                 if(tempPts[i].inBounds(bounds)){
                     tempPts[i].scaleVector(scaleVector);
                     let point : PointVector = tempPts[i].addUtil(traslationVector);
+                    
+                    if(g[index].isSelected()){
+                        point.setSelected(true);
+                    }
+
                     pointsToWrite.push(point);
                 }
-                //console.log(tempPts[i]);
-                
-                
             }
         }
 
         for(let i = 0; i < pointsToWrite.length; i++){
+
             let px = this.pixelLocation(pointsToWrite[i], ui.getCanvas().width, ui.getCanvas().height);
-            this.setPixelToBlack(px, img);
+            
+            if(pointsToWrite[i].isSelected()){
+                this.setPixel(px, this.selectedColor, img);
+            }else{
+                this.setPixelToBlack(px, img);
+            }
+            
         }
     }
 

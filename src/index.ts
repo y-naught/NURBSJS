@@ -105,6 +105,10 @@ export function addGeometry(g : Geometry){
     geom.push(g);
 }
 
+export function getGeometry() : Geometry[]{
+    return geom;
+}
+
 export function printGeom(){
     for(let i = 0; i < geom.length; i++){
         console.log(geom[i]);

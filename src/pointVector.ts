@@ -122,6 +122,12 @@ export class PointVector extends Geometry{
         return new PointVector(tempX, tempY, tempZ);
     }
 
+    distance(_v : PointVector) : number {
+        let tempV = this.subtract(_v);
+        return tempV.magnitude();
+    }
+
+    // function that is used to check to see if the point object is within the bounds of the window
     inBounds(bounds : number[]){
         
         console.log(this.value);
