@@ -25,8 +25,6 @@ let pt7 = new PointVector(500,0,0);
 let pt8 = new PointVector(250,0,0);
 let pt9 = new PointVector(0,0,0);
 
-//let kts = [0,0,0,0,1,1,1,1,1];
-//let kts = [0,1,2,3,4,5,6,7,8,9,10,11,12];
 let kts = [0,0,0,0.25,0.25,0.5,0.5,0.75,0.75,1,1,1];
 let pts = [pt2, pt3, pt4, pt5, pt6, pt7, pt8, pt9, pt];
 let wts = [1.0,0.707107,1,0.707107,1,0.707107,1,0.707107,1.0];
@@ -41,8 +39,6 @@ function main() {
     document.body.appendChild(ui.getStatusContainer());
     
 
-    //let lines: Line[] = generateLines(25, canvas.width, canvas.height);
-
     let spline : Spline = createSpline(pts, kts, wts, deg);
     let moveVector = new PointVector(50, 50,0);
     spline.translate(moveVector);
@@ -50,10 +46,6 @@ function main() {
 
     ui.setCanvasSize();
     
-
-    // for(let i = 0; i < lines.length; i++){
-    //     geom.push(lines[i]);
-    // }
     geom.push(spline);
     renderer.writeFrame(ui, geom, camera);
 }

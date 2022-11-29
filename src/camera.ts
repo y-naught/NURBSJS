@@ -73,14 +73,8 @@ export class Camera2D{
             yStart = this.location.value[1] - _h/2;
             yEnd = this.location.value[1] + _h/2;
         }
-        console.log("this.location : ");
-        console.log(this.locationTemp.value);
-        console.log("_w :", _w);
-        console.log("_h :", _h);
 
         let arr = [xStart, xEnd, yStart, yEnd];
-
-        //console.log(arr);
 
         return arr;
     }

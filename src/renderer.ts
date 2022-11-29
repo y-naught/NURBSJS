@@ -67,7 +67,6 @@ export class Renderer{
             let px = this.pixelLocation(yPts[i], ui.getCanvas().width, ui.getCanvas().height);
             this.setPixel(px, this.yAxisColor, img);
         }
-
     }
 
     renderGeometry(img : ImageData, g: Geometry[], ui:  UI, cam : Camera2D){

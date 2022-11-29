@@ -129,16 +129,10 @@ export class PointVector extends Geometry{
 
     // function that is used to check to see if the point object is within the bounds of the window
     inBounds(bounds : number[]){
-        
-        console.log(this.value);
-        console.log("bounds : ")
-        console.log(bounds);
 
         if(this.value[0] < (bounds[0]) || this.value[0] > (bounds[1])){
-            console.log("false on X!");
             return false;
         }else if(this.value[1] < bounds[2] || this.value[1] > bounds[3]){
-            console.log("false on Y!");
             return false;
         }else{
             return true;

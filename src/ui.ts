@@ -4,7 +4,7 @@
 import {File, saveFile, saveFileAs} from './file';
 import { PointVector } from './pointVector.js';
 import { Line } from './line.js';
-import {CircleCNRCommand, Command, LineCommand, Rectangle2Command} from './command.js'
+import {CircleCNRCommand, Command, LineCommand, MoveCommand, Rectangle2Command} from './command.js'
 import { updateFrame, printGeom, getGeometry  } from '.';
 import { Geometry } from './geometry';
 import {Camera2D} from './camera';
@@ -141,8 +141,6 @@ export class UI {
                     }
                     // update the frame
                     updateFrame();
-
-
                     break;
                 case 1:
                     // middle mouse button
@@ -175,20 +173,22 @@ export class UI {
     }
 
     setCanvasKeyListeners(){
-        this.canvas.addEventListener("keydown", (event) => {
-            if(event.key == "Escape"){
+        document.addEventListener("keydown", (event) => {
+            if(event.key === "Escape"){
                 let _g = getGeometry();
                 for(let i = 0; i < _g.length; i++){
                     _g[i].setSelected(false);
                 }
-            }else if(event.key == "shift"){
+            }else if(event.key === "Shift"){
                 this.shiftHeld = true;
+                console.log("shift Down")
             }
         })
 
-        this.canvas.addEventListener("keyup", (event) => {
-            if(event.key == "shift"){
+        document.addEventListener("keyup", (event) => {
+            if(event.key === "Shift"){
                 this.shiftHeld = false;
+                console.log("Shift Up");
             }
         })
     }
@@ -408,13 +408,38 @@ export class CommandLine{
             this.output.append(msg);
             this.command = new Rectangle2Command(this, this.output);
         }
-        else if(userInputLower = "selnone"){
+        else if(userInputLower == "selnone"){
             let _g = getGeometry();
             for(let i = 0; i < _g.length; i++){
                 _g[i].setSelected(false);
             }
             this.output.append("Selecting None");
             updateFrame();
+        }
+        else if(userInputLower == "move"){
+            let _g = getGeometry();
+            let index = 0;
+            let somethingSelected = false;
+            let msg;
+            //check to see if there is anything selected
+            while(index < _g.length){
+                if(_g[index].isSelected()){
+                    somethingSelected = true;
+                    break;
+                }
+                index+=1;
+            }
+            
+            // TODO
+            // This should be handled inside the move command where it could prompt the user to select objects
+            // without cancelling the command
+            if(somethingSelected){
+                let msg = "Running the move command";
+                this.output.append(msg);
+                this.command = new MoveCommand(this, this.output);
+            }else{
+                let msg = "Nothing is selected! Please Select your geometry before running the move command"
+            }
         }
         else{
             let msg : String = "Command : \"" + userInput + "\" isn't recognized";

@@ -48,6 +48,11 @@ export class Line extends Geometry {
         return this.end.subtract(this.start).magnitude();
     }
 
+    translate(_v : PointVector){
+        this.start.translate(_v);
+        this.end.translate(_v);
+    }
+
 
     // TODO
     // running a divide and conquer method until we find a more exact closest point

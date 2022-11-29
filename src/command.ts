@@ -4,7 +4,7 @@
 import {PointVector} from './pointVector.js'
 import {Line} from './line.js'
 import {CommandLine, CommandLineOutput} from './ui.js'
-import { addGeometry, updateFrame } from './index.js';
+import { addGeometry, getGeometry, updateFrame } from './index.js';
 import { Spline } from './spline.js';
 import { Rectangle } from './rectangle.js';
 
@@ -29,7 +29,6 @@ export class LineCommand extends Command{
     startPt : PointVector;
     endPt : PointVector;
 
-
     constructor(_in : CommandLine, _out : CommandLineOutput){
         super(_in, _out, "line");
         this.output.append("Enter the coordinates for the start point : format x,y,z");
@@ -43,8 +42,6 @@ export class LineCommand extends Command{
                 this.startPt = new PointVector(coords[0], coords[1], coords[2]);
             }else{
                 this.endPt = new PointVector(coords[0], coords[1], coords[2]);
-                console.log("endPt");
-                console.log(this.endPt);
                 let line = new Line(this.startPt, this.endPt);
                 addGeometry(line);
                 this.output.append("added line")
@@ -147,6 +144,42 @@ export class Rectangle2Command extends Command{
     }
 }
 
+export class MoveCommand extends Command{
+    startPt : PointVector;
+    endPt : PointVector;
+
+    constructor(_in : CommandLine, _out : CommandLineOutput){
+        super(_in, _out, "move");
+        this.output.append("Enter Coordinates for the start of the move vector");
+    }
+
+    update(_in: String): void {
+        if(checkPointFormat(_in)){
+            let coords : number[] = deconstructPoint(_in);
+
+            if(!this.startPt){
+                this.startPt = new PointVector(coords[0], coords[1], coords[2]);
+                this.output.append(this.startPt.value[0] + "," + this.startPt.value[1] + "," + this.startPt.value[2]);
+                this.output.append("Enter Coordinates for the end of the move vector");
+            }else{
+                this.endPt = new PointVector(coords[0], coords[1], coords[2]);
+                this.output.append(this.endPt.value[0] + "," + this.endPt.value[1] + "," + this.endPt.value[2]);
+                let moveVector = this.endPt.subtract(this.startPt);
+                let _g = getGeometry();
+                for(let i = 0; i < _g.length; i++){
+                    if(_g[i].isSelected()){
+                        _g[i].translate(moveVector);
+                    }
+                }
+                this.output.append("Moved all selected geometry");
+                updateFrame();
+                this.isComplete = true;
+            }
+        }else{
+            this.output.append("Your point isn't valid. Format:  x,y,z");
+        }
+    }
+}
 
 /******Utility functions ********/
 

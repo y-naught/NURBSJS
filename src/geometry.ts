@@ -20,7 +20,7 @@ export class Geometry {
         this.layer = "default"
     }
 
-    //prototype function necessary for the frame generator to call on each type of geometry to render
+    //prototype functions necessary for the frame generator to call on each type of geometry to render
     render(samples: number): PointVector[]{
         let arr: PointVector[] = new Array<PointVector>();
         return arr;
@@ -36,6 +36,10 @@ export class Geometry {
 
     isSelected() : boolean{
         return this.selected;
+    }
+
+    translate(_v : PointVector) : void{
+
     }
 }
 
