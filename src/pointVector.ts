@@ -127,6 +127,14 @@ export class PointVector extends Geometry{
         return tempV.magnitude();
     }
 
+    // TODO
+    // This is just a placeholder for the correct and universal rotation translation
+    rotatePt(angle : number, radius : number) : PointVector {
+        let _x = this.value[0] + radius * Math.cos(angle);
+        let _y = this.value[1] + radius * Math.sin(angle);
+        return new PointVector(_x, _y, this.value[2]);
+    }
+
     // function that is used to check to see if the point object is within the bounds of the window
     inBounds(bounds : number[]){
 

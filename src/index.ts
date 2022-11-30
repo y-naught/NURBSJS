@@ -104,7 +104,7 @@ export function getGeometry() : Geometry[]{
 export function printGeom(){
     for(let i = 0; i < geom.length; i++){
         console.log(geom[i]);
-        }
+    }
 }
 
 export function updateFrame() : void {

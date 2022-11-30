@@ -130,7 +130,8 @@ export class Rectangle2Command extends Command{
             this.output.append("Enter the coordinates for the opposite corner, format : x,y,z");
             if(!this.startPt){
                 this.startPt = new PointVector(coords[0], coords[1], coords[2]);
-            }else{
+            }
+            else{
                 this.endPt = new PointVector(coords[0], coords[1], coords[2]);
                 let rect = new Rectangle(this.startPt, this.endPt.value[0] - this.startPt.value[0], this.endPt.value[1] - this.startPt.value[1])
                 addGeometry(rect);
@@ -150,7 +151,7 @@ export class MoveCommand extends Command{
 
     constructor(_in : CommandLine, _out : CommandLineOutput){
         super(_in, _out, "move");
-        this.output.append("Enter Coordinates for the start of the move vector");
+        this.output.append("Enter Coordinates for the point to move from");
     }
 
     update(_in: String): void {
@@ -160,7 +161,7 @@ export class MoveCommand extends Command{
             if(!this.startPt){
                 this.startPt = new PointVector(coords[0], coords[1], coords[2]);
                 this.output.append(this.startPt.value[0] + "," + this.startPt.value[1] + "," + this.startPt.value[2]);
-                this.output.append("Enter Coordinates for the end of the move vector");
+                this.output.append("Enter Coordinates for the point to move to");
             }else{
                 this.endPt = new PointVector(coords[0], coords[1], coords[2]);
                 this.output.append(this.endPt.value[0] + "," + this.endPt.value[1] + "," + this.endPt.value[2]);
@@ -178,6 +179,85 @@ export class MoveCommand extends Command{
         }else{
             this.output.append("Your point isn't valid. Format:  x,y,z");
         }
+    }
+}
+
+export class PolygonCommand extends Command{
+    center : PointVector;
+    pts : PointVector[];
+    kts : number[];
+    wts : number[];
+    degree : number;
+    step : number;
+    numSides : number;
+    radius : number;
+
+    constructor(_in : CommandLine, _out : CommandLineOutput){
+        super(_in, _out, "Polygon");
+        this.output.append("Enter the center point of the polygon : Format x,y,z");
+        this.step = 0;
+    }
+
+    update(_in: string): void {
+        if(this.step === 0){
+            if(checkPointFormat(_in)){
+                this.center = deconstructPointV(_in);
+                this.output.append("Enter the number of sides for your polygon");
+                this.step = 1;
+            }else{
+                this.output.append("Point format invalid. Format x,y,z");
+            }
+        }else if(this.step === 1){
+            if(checkIntegerFormat(_in)){
+                if(parseInt(_in) > 2){
+                    this.numSides = parseInt(_in);
+                    this.output.append("Enter the corner radius of the polygon");
+                    this.step = 2;
+                }else{
+                    this.output.append("Number of sides must be greater than 2");
+                }
+            }else{
+                this.output.append("Please enter an integer");
+            }
+        }else if(this.step === 2){
+            if(checkScalarFormat(_in)){
+                this.radius = Number(_in);
+                //generate our spline
+                //base point
+
+                let xVector = new PointVector(this.radius, 0, 0);
+                let basePoint = this.center.addUtil(xVector);
+                
+                this.pts = [] as any;
+                this.wts = [] as any;
+                this.kts = [] as any;
+
+                for(let i = 0; i < this.numSides; i++){
+                    let ang = i / this.numSides * (Math.PI * 2);
+                    let tempPt = this.center.rotatePt(ang, this.radius);
+                    this.pts.push(tempPt);
+                    this.wts.push(1);
+                    this.kts.push(i);
+                }
+                
+                this.pts.push(basePoint);
+                this.wts.push(1);
+                this.kts.push(this.numSides);
+                this.kts.push(this.numSides+1);
+
+                this.degree = 1;
+
+                let crv = new Spline(this.pts, this.kts, this.wts, this.degree);
+                addGeometry(crv);
+                this.output.append("Added polygon");
+                updateFrame();
+                this.isComplete = true;
+
+            }else{
+                this.output.append("Please enter a valid scalar");
+            }
+        }
+
     }
 }
 
@@ -214,6 +294,14 @@ function checkScalarFormat(_in : String) : boolean{
         return true
     }else{
         return false
+    }
+}
+
+function checkIntegerFormat(_in : string) : boolean{
+    if(parseInt(_in) != NaN){
+        return true;
+    }else{
+        return false;
     }
 }
 

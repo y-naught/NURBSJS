@@ -4,7 +4,7 @@
 import {File, saveFile, saveFileAs} from './file';
 import { PointVector } from './pointVector.js';
 import { Line } from './line.js';
-import {CircleCNRCommand, Command, LineCommand, MoveCommand, Rectangle2Command} from './command.js'
+import {CircleCNRCommand, Command, LineCommand, MoveCommand, PolygonCommand, Rectangle2Command} from './command.js'
 import { updateFrame, printGeom, getGeometry  } from '.';
 import { Geometry } from './geometry';
 import {Camera2D} from './camera';
@@ -333,7 +333,6 @@ export class CommandLine{
         this.output = _output;
         this.container.setAttribute("id", "cmdLineContainer");
         this.textBox.setAttribute("id", "cmdLineInput");
-        
         this.setInputListener();
         this.container.appendChild(this.textBox);
     }
@@ -385,6 +384,7 @@ export class CommandLine{
 
     runCommand(userInput:  String){
         let userInputLower = userInput.toLowerCase();
+        // TODO complete this
         if(userInputLower == "point"){
             // run the point generating command
             let msg : String = "Running the point command"
@@ -397,13 +397,16 @@ export class CommandLine{
             console.log(msg);
             this.output.append(msg);
             this.command = new LineCommand(this, this.output);
-        }else if(userInputLower == "printgeom"){
+        }
+        else if(userInputLower == "printgeom"){
             printGeom();
-        }else if(userInputLower == "circle"){
+        }
+        else if(userInputLower == "circle"){
             let msg : String = "Starting the circle command";
             this.output.append(msg);
             this.command = new CircleCNRCommand(this, this.output);
-        }else if(userInputLower == "rectangle2"){
+        }
+        else if(userInputLower == "rectangle2"){
             let msg : String = "Starting the rectangle command";
             this.output.append(msg);
             this.command = new Rectangle2Command(this, this.output);
@@ -420,7 +423,7 @@ export class CommandLine{
             let _g = getGeometry();
             let index = 0;
             let somethingSelected = false;
-            let msg;
+
             //check to see if there is anything selected
             while(index < _g.length){
                 if(_g[index].isSelected()){
@@ -441,6 +444,11 @@ export class CommandLine{
                 let msg = "Nothing is selected! Please Select your geometry before running the move command"
             }
         }
+        else if(userInputLower == "polygon"){
+            let msg = "Stating Polygon Command";
+            this.output.append(msg);
+            this.command = new PolygonCommand(this, this.output);
+        }
         else{
             let msg : String = "Command : \"" + userInput + "\" isn't recognized";
             console.log(msg);
@@ -450,13 +458,14 @@ export class CommandLine{
 }
 
 
+
+
+
 /********* Constants where the names of the dropdown menu functions exist **************/
 
 
 const fileDropDown = ["Save", "Save As", "Document Properties", "etc"];
 const fileDropDownFunctions = [saveFile, saveFileAs];
-
-
 
 
 
