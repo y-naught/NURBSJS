@@ -4,7 +4,7 @@
 import {File, saveFile, saveFileAs} from './file';
 import { PointVector } from './pointVector.js';
 import { Line } from './line.js';
-import {BoundingBoxCommand, CircleCNRCommand, Command, LineCommand, MoveCommand, PolygonCommand, Rectangle2Command} from './command.js'
+import {BoundingBoxCommand, CircleCNRCommand, Command, LineCommand, MoveCommand, PointCommand, PolygonCommand, Rectangle2Command} from './command.js'
 import { updateFrame, printGeom, getGeometry  } from '.';
 import { Geometry } from './geometry';
 import {Camera2D} from './camera';
@@ -100,6 +100,10 @@ export class UI {
         })
 
         this.canvas.addEventListener("mouseup", (event) => {
+
+            // TODO 
+            // Click selection system appears to be broken for pointvector selection
+
             //this.mousePosStart = this.getMousePosition(event);
             switch(event.button){
                 case 0:
@@ -123,6 +127,7 @@ export class UI {
                         
                         let pointInfo = curGeometry[i].closestPoint(clickPoint);
                         let curDistance = pointInfo[0].distance(clickPoint);
+                        console.log("curDistance : ", curDistance);
                         if(curDistance < closestDistance){
                             closestIndex = i;
                             closestDistance = curDistance;
@@ -387,9 +392,9 @@ export class CommandLine{
         // TODO complete this
         if(userInputLower == "point"){
             // run the point generating command
-            let msg : String = "Running the point command"
-            console.log(msg);
+            let msg = "Starting Point Command";
             this.output.append(msg);
+            this.command = new PointCommand(this, this.output);
         }
         else if(userInputLower == "line"){
             // runs the line command
@@ -450,6 +455,10 @@ export class CommandLine{
             this.command = new PolygonCommand(this, this.output);
         }
         else if(userInputLower == "boundingbox"){
+
+            // TODO
+            // I need to figure out how to force close the command so the user doesn't have to press
+            // enter twice 
             let _g = getGeometry();
             let somethingSelected = false;
             let index = 0;

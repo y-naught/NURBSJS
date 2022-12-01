@@ -146,4 +146,18 @@ export class PointVector extends Geometry{
             return true;
         }
     }
+
+    render(samples : number) : PointVector[]{
+        return [this];
+    }
+
+    evaluate(_t: number): PointVector {
+        return this;
+    }
+
+    closestPoint(_pt: any): [PointVector, number] {
+        let dist = this.distance(_pt);
+        console.log("Distance : ", dist)
+        return [this, dist];
+    }
 }

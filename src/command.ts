@@ -275,6 +275,7 @@ export class BoundingBoxCommand extends Command{
         this.maxX = -10000000;
         this.minY = 100000000;
         this.maxY = -100000000;
+        this.output.append("Press enter to confirm your selected objects");
     }
 
     update(_in: String): void {
@@ -319,10 +320,33 @@ export class BoundingBoxCommand extends Command{
         let rect = new Rectangle2Pt(pt1, pt2);
 
         addGeometry(rect);
-        this.output.append("Generated Bounding Box");
+        this.output.append("Generated bounding box around " + selectedInidices.length + " objects.");
         updateFrame();
 
         this.isComplete = true;
+    }
+}
+
+export class PointCommand extends Command{
+
+    constructor(_in : CommandLine, _out : CommandLineOutput){
+        super(_in, _out, "point");
+        console.log("point command constructor has run"); 
+        this.output.append("Enter the coordinates for the point you would like to create");
+    }
+
+    update(_in: String): void {
+        if(checkPointFormat(_in)){
+            let coords = deconstructPoint(_in);
+            let newPt = new PointVector(coords[0], coords[1], coords[2]);
+            addGeometry(newPt);
+            this.output.append("Added point");
+            updateFrame();
+            this.isComplete = true;
+        }else{
+            let msg = "Please check the format of your point : x,y,z";
+            this.output.append(msg);
+        }
     }
 }
 
