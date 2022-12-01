@@ -4,7 +4,7 @@
 import {File, saveFile, saveFileAs} from './file';
 import { PointVector } from './pointVector.js';
 import { Line } from './line.js';
-import {CircleCNRCommand, Command, LineCommand, MoveCommand, PolygonCommand, Rectangle2Command} from './command.js'
+import {BoundingBoxCommand, CircleCNRCommand, Command, LineCommand, MoveCommand, PolygonCommand, Rectangle2Command} from './command.js'
 import { updateFrame, printGeom, getGeometry  } from '.';
 import { Geometry } from './geometry';
 import {Camera2D} from './camera';
@@ -445,9 +445,32 @@ export class CommandLine{
             }
         }
         else if(userInputLower == "polygon"){
-            let msg = "Stating Polygon Command";
+            let msg = "Starting Polygon Command";
             this.output.append(msg);
             this.command = new PolygonCommand(this, this.output);
+        }
+        else if(userInputLower == "boundingbox"){
+            let _g = getGeometry();
+            let somethingSelected = false;
+            let index = 0;
+
+            while(!somethingSelected && index < _g.length){
+                if(_g[index].isSelected()){
+                    somethingSelected = true;
+                    break;
+                }
+                index++;
+            }
+
+            if(somethingSelected){
+                let msg = "Starting Bounding Box Command";
+                this.output.append(msg);
+                this.command = new BoundingBoxCommand(this, this.output);
+                //this.runCommand();
+            }else{
+                let msg = "Please select some goemetry before running the bounding box command";
+                this.output.append(msg);
+            }
         }
         else{
             let msg : String = "Command : \"" + userInput + "\" isn't recognized";

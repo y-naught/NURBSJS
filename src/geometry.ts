@@ -41,5 +41,9 @@ export class Geometry {
     translate(_v : PointVector) : void{
 
     }
+
+    evaluate(_t : number) : PointVector{
+        return new PointVector(0,0,0);
+    }
 }
 

@@ -6,7 +6,7 @@ import {Line} from './line.js'
 import {CommandLine, CommandLineOutput} from './ui.js'
 import { addGeometry, getGeometry, updateFrame } from './index.js';
 import { Spline } from './spline.js';
-import { Rectangle } from './rectangle.js';
+import { Rectangle, Rectangle2Pt } from './rectangle.js';
 
 export class Command{
     cmdName : string;
@@ -258,6 +258,71 @@ export class PolygonCommand extends Command{
             }
         }
 
+    }
+}
+
+export class BoundingBoxCommand extends Command{
+
+    minX : number;
+    maxX : number;
+    minY : number;
+    maxY : number;
+
+    constructor(_in : CommandLine, _out : CommandLineOutput){
+        super(_in, _out, "Bounding Box");
+        //initialize with unrealistic values
+        this.minX = 100000000;
+        this.maxX = -10000000;
+        this.minY = 100000000;
+        this.maxY = -100000000;
+    }
+
+    update(_in: String): void {
+        let _g = getGeometry();
+        let selectedInidices = [] as any;
+
+        //collect the selected geometry
+        for(let i = 0; i < _g.length; i++){
+            if(_g[i].isSelected()){
+                selectedInidices.push(i);
+            }
+        }
+        console.log(selectedInidices);
+
+        // find the min, max for each axis
+        for(let i = 0; i < selectedInidices.length; i++){
+
+            let numEvaluations = 1000;
+            // approximate the bounds for each point 
+            for(let j = 0; j < numEvaluations; j++){
+
+                let _t = j / numEvaluations;
+                let tempPt = _g[selectedInidices[i]].evaluate(_t);
+                if(tempPt.value[0] < this.minX){
+                    this.minX = tempPt.value[0];
+                }
+                if(tempPt.value[0] > this.maxX){
+                    this.maxX = tempPt.value[0];
+                }
+                if(tempPt.value[1] < this.minY){
+                    this.minY = tempPt.value[1];
+                }
+                if(tempPt.value[1] > this.maxY){
+                    this.maxY = tempPt.value[1];
+                }
+            }
+        }
+
+        let pt1 = new PointVector(this.minX, this.minY, 0);
+        let pt2 = new PointVector(this.maxX, this.maxY, 0);
+
+        let rect = new Rectangle2Pt(pt1, pt2);
+
+        addGeometry(rect);
+        this.output.append("Generated Bounding Box");
+        updateFrame();
+
+        this.isComplete = true;
     }
 }
 
