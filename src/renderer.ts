@@ -62,10 +62,13 @@ export class Renderer{
         }
 
         for(let i = 0; i < yPts.length; i++){
-            yPts[i].scaleVector(scaleVector);
-            yPts[i].add(translationVector);
-            let px = this.pixelLocation(yPts[i], ui.getCanvas().width, ui.getCanvas().height);
-            this.setPixel(px, this.yAxisColor, img);
+            if(yPts[i].inBounds(cameraBounds)){
+                yPts[i].scaleVector(scaleVector);
+                yPts[i].add(translationVector);
+            
+                let px = this.pixelLocation(yPts[i], ui.getCanvas().width, ui.getCanvas().height);
+                this.setPixel(px, this.yAxisColor, img);
+            }
         }
     }
 

@@ -226,4 +226,34 @@ export class Spline extends Geometry {
 
         return [curPt, curT];
     }
+
+    // Function to return whether or not the spline is closed
+  isClosed(): boolean {
+    // Check if the end points of the curve are coincident
+    const firstPoint = this.points[0];
+    const lastPoint = this.points[this.points.length - 1];
+    
+    if (firstPoint.value[0] !== lastPoint.value[0] || firstPoint.value[1] !== lastPoint.value[1] || firstPoint.value[2] !== lastPoint.value[2]) {
+        return false;
+    }
+
+    // Check if the end knots of the spline are coincident
+    const firstKnot = this.knots[0];
+    const lastKnot = this.knots[this.knots.length - 1];
+    
+    if (firstKnot !== lastKnot) {
+        return false;
+    }
+
+    // Check if the end weights of the spline are coincident
+    const firstWeight = this.weights[0];
+    const lastWeight = this.weights[this.weights.length - 1];
+    
+    if (firstWeight !== lastWeight) {
+        return false;
+    }
+
+    // If all of the above checks pass, then the spline is closed
+    return true;
+  }
 }
