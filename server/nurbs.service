@@ -1,0 +1,9 @@
+[Unit]
+Description=Nurbsjs Web Server
+
+[Service]
+ExecStart=node /root/NURBSJS/server/serve.js
+Restart=always
+
+[Install]
+WantedBy=default.target

@@ -64,6 +64,9 @@ The package is currently in a prototype phase, where I am experimenting with str
 
 This software is currently compiled using the typescript compiler and then made browser-ready by Browserify. I intend to move this to WebPack at some point during the prototyping phase.
 
+The current version of the software can be accessed at http://www.nurbsjs.com
+
+
 ### Compiling
 
 If you have not done so already, install the node packages used in the system.
