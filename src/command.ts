@@ -370,7 +370,7 @@ function checkPointFormat(_in : String) : boolean{
     let yVal = _in.substring(indices[0]+1, indices[1]);
     let zVal = _in.substring(indices[1]+1, _in.length);
 
-    if(Number(xVal) != NaN && Number(yVal) != NaN && Number(zVal) != NaN){
+    if(!Number.isNaN(xVal) && !Number.isNaN(yVal) && !Number.isNaN(zVal)){
         return true;
     }else{
         return false;
@@ -379,7 +379,7 @@ function checkPointFormat(_in : String) : boolean{
 
 // user input validation checker for a scalar
 function checkScalarFormat(_in : String) : boolean{
-    if(Number(_in) != NaN){
+    if(Number.isNaN(_in)){
         return true
     }else{
         return false
@@ -387,7 +387,7 @@ function checkScalarFormat(_in : String) : boolean{
 }
 
 function checkIntegerFormat(_in : string) : boolean{
-    if(parseInt(_in) != NaN){
+    if(!Number.isNaN(parseInt(_in))){
         return true;
     }else{
         return false;
