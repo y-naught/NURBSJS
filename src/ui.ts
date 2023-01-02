@@ -532,18 +532,10 @@ class DropDownMenu{
             this.clss = [];
         }
         this.expanded = false;
-        this.container.addEventListener('onclick', this.toggleExpansion);
         this.items = this.constructDropdownItems(fileDropDown, fileDropDownFunctions);
     }
 
-    toggleExpansion() : void {
-        //directs
-        if(!this.expanded){
-            this.showItems();
-        }else{
-            this.hideItems();
-        }
-    }
+    
 
     showItems(){
         //expands drop down menu
@@ -572,7 +564,9 @@ class DropDownMenu{
 /*** Menu Bar is a place to accumulate drop down menus */
 class MenuBar {
 
-    
+    menus : DropDownMenu[];
+    container : HTMLDivElement;
+
 
     constructor(){
 

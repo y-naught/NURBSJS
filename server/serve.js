@@ -11,6 +11,22 @@ app.get("/", (request, response) => {
     response.sendFile(path.join(mainDirectory, "index.html"));
 })
 
+app.get("/landing.css", (request, response) => {
+    response.sendFile(path.join(mainDirectory, "landing.css"));
+})
+
+app.get("/manual.css", (request, response) => {
+    response.sendFile(path.join(mainDirectory, "manual.css"));
+})
+
+app.get("/manual.html", (request, response) => {
+    response.sendFile(path.join(mainDirectory, "manual.html"));
+})
+
+app.get("/app", (request, response) => {
+    response.sendFile(path.join(mainDirectory, "app.html"));
+})
+
 app.get("/styles.css", (request, response) => {
     response.sendFile(path.join(mainDirectory, "styles.css"));
 })

@@ -2,6 +2,10 @@
 
 ---
 
+The current working version of the application can be found here: http://www.nurbsjs.com
+
+---
+
 ## What is NURBS.js?
 
 NURBS.js is a JavaScript based geometry engine intended to be run in the browser, written in TypeScript.  This project is intended to initially be just a relatively efficient math library containing basic operations such as vector transformations and basic definitions of objects such as points, lines, splines, and surfaces. 

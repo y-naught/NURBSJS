@@ -379,7 +379,7 @@ function checkPointFormat(_in : String) : boolean{
 
 // user input validation checker for a scalar
 function checkScalarFormat(_in : String) : boolean{
-    if(Number.isNaN(_in)){
+    if(!Number.isNaN(_in)){
         return true
     }else{
         return false

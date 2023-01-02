@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="manual.css">
+    <title>Nurbs.js Manual</title>
+</head>
+<body>
+    <h1 id="manual">NURBS.js Manual</h1>
+    <p>Welcome to NURBS.js 2D! </p>
+    <p>Here you will find the documentation for what commands are available, and how to use the canvas-mouse interface.</p>
+    <p>Please note that NURBS.js is a work in progress and will be changing frequently. Check out the <a href="https://github.com/y-naught/NURBSJS">GitHub</a> page to learn more about the project and to find more source code</p>
+    <br>
+    <hr>
+    <h2 id="canvas-mouse-interface">Canvas-Mouse Interface</h2>
+    <p>There are event handlers that are designed for click and drag on our canvas, here is what is currently implemented.</p>
+    <h3 id="left-click">Left Click</h3>
+    <p>If you left click on or near some piece of geometry on the canvas it will highlight yellow and be selected.</p>
+    <p>If you hold SHIFT while you left click, it will allow you to select multiple pieces of geometry. </p>
+    <p>If you click away from any geometry while it is selected and you do not have SHIFT held, then it will deselect all geometry that has already been selected.</p>
+    <h3 id="right-click-and-drag">Right Click and Drag</h3>
+    <p>To move around the canvas you simply can right click and drag on the canvas. </p>
+    <h3>Scroll Zoom</h3>
+    <p>Coming Soon!</p>
+    <br>
+    <hr>
+    <h2 id="command-line">Command Line</h2>
+    <p>The system is currenty based on a command line interface. The command line  allows you to start and give inputs to commands. Some commands may require you to have a geometry selected before you start them. </p>
+    <p>Your interactions with the command line will be saved to a history and displayed in the block above the command line. </p>
+    <p>Many of these commands are based on inputting points into the command line until a point and click mouse interface is added to the system. The command line will take a particular format for a point that should be types as</p>
+    <pre>
+        <code class="lang-Command">x,y,z</code>
+    </pre>
+    <p>If it is not formatted this way, it will fail to parse you point and prompt you to enter the coordinates again.</p>
+    <h3 id="move">Move</h3>
+    <p>This command requires you to have some geometry selected before starting the command. </p>
+    <p>The move command will prompt you to enter two points. These two points will create a vector for which to move your selected geometry by. The prompts will ask you to enter a start point for your move and then an end point for your move.</p>
+    <h3 id="line">Line</h3>
+    <p>This command will ask for a start and end point for a line and then create that line and add it to the canvas.</p>
+    <h3 id="circle">Circle</h3>
+    <p>The circle command will create a circle and apply it to the canvas. Currently this function will ask you to input a center point for the circle and then it will ask for a radius to the circle.</p>
+    <h3 id="rectangle2">Rectangle2</h3>
+    <p>The rectangle2 command creates a rectangle based on two corner points. The command will prompt you to input two points the correspond to the two opposite corners of the rectangle.</p>
+    <h3 id="selnone">SelNone</h3>
+    <p>This command is an alternate way to deselect all geometry.</p>
+    <h3 id="polygon">Polygon</h3>
+    <p>The polygon command allows you to create a regular n-sided polygon. The command will prompt you to first input the center you want your polygon to be generated around, then prompt you to input the number of sides your polygon should have, and then it will ask you for a corner radius for you polygon. </p>
+    <p>In this case, corner radius is devined as the distance between the center of your polygon and the vertices of each side. </p>
+    <h3 id="bounding-box">Bounding Box</h2>
+    <p>The bounding box command will find the extremes of the geometry that you have selected and create a rectangle around them. </p>
+    <p>You must have some geometry selected before running this command. </p>
+</body>
+</html>
