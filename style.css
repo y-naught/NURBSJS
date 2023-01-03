@@ -1,6 +1,7 @@
 body {
     background-color: black;
     margin: 0;
+    overflow: hidden;
 }
 
 #viewport{
@@ -44,6 +45,49 @@ body {
     justify-content: center;
     margin-left: 5px;
     margin-right: 5px;
+    font-size: 10pt;
+    color: white;
+}
+
+.dropdown-button{
+    position: relative;
+    min-width: 100px;
+    
+}
+
+.dropdown:hover .dropdown-content{
+    display: block;
+}
+
+.dropdown-content{
+    display: none;
+    position: absolute;
+    background-color: #555555;
+    min-width: 120px;
+}
+
+.dropdown-content-container{
+    background-color: #555555;
+}
+
+.dropdown-content-container:hover{
+    background-color: #333333;
+    cursor: pointer;
+}
+
+
+.dropdown{
+    display: inline-block;
+    position: relative;
+    height: 30px;
+    
+}
+
+.menuText{
+    text-align: center;
+    justify-content: center;
+    padding: 6px;
+    margin: 0px;
     font-size: 10pt;
     color: white;
 }

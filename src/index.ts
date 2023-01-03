@@ -33,6 +33,7 @@ let deg = 2;
 function main() {
     
     // Where we construct out webpage components from
+    document.body.appendChild(ui.getMenuContainer());
     document.body.appendChild(ui.getCMDOutputContainer());
     document.body.appendChild(ui.getCMDContainer());
     document.body.appendChild(ui.getCanvas());

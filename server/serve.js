@@ -2,6 +2,7 @@ const express = require('express');
 const path = require('path');
 
 const mainDirectory = "/home/greg/Documents/Web_Dev/NURBSJS";
+//const mainDirectory = "/root/NURBSJS/"
 const buildDirectory = path.join(mainDirectory, "build");
 
 let app = express();

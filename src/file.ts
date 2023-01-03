@@ -30,7 +30,7 @@ export class File {
 
     saveFileAs(){
         // save as new file and leave the old file behind with the last saved changes
-
+        console.log("saved as!");
     }
 
     add(_g: Geometry){
@@ -56,14 +56,11 @@ export class File {
 }
   
 
-export function saveFile(f : File){
-    let confirmation = '';
-
-    return confirmation;
+export function saveFile(){
+    console.log("Changes have been saved");
 }
 
 
-export function saveFileAs(fProp : Properties, n : String) : File{
-    let newFile = new File(fProp, n);
-    return newFile;
+export function saveFileAs(){
+    console.log("saved as!");
 }

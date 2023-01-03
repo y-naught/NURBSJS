@@ -26,14 +26,15 @@ export class UI {
     camera : Camera2D;
     selectedGeometry : Geometry[];
     selectionTolerance : number = 1;
+    menuBar : MenuBar;
     
 
     constructor(){
-        console.log("creating the UI object");
         this.cmdOutput = new CommandLineOutput();
         this.cmd = new CommandLine(this.cmdOutput);
         this.canvas = this.createCanvas();
         this.statusBar = new StatusBar();
+        this.menuBar = new MenuBar();
         this.mousePos = [0,0];
         this.setCanvasMouseListeners();
         this.setResizeListener();
@@ -67,6 +68,10 @@ export class UI {
 
     getStatusContainer() : HTMLDivElement {
         return this.statusBar.getContainer();
+    }
+
+    getMenuContainer() : HTMLDivElement {
+        return this.menuBar.getContainer();
     }
 
     setCanvasMouseListeners() : void{
@@ -224,7 +229,8 @@ export class UI {
         
         takenHeight = this.cmd.getContainer().clientHeight 
                     + this.cmdOutput.getContainer().clientHeight 
-                    + this.statusBar.getContainer().clientHeight; 
+                    + this.statusBar.getContainer().clientHeight
+                    + this.menuBar.getContainer().clientHeight; 
 
         this.canvas.width = w - takenWidth;
         this.canvas.height = h - takenHeight;
@@ -270,12 +276,13 @@ export class CommandLineOutput{
 
     constructor(){
 
-        this.log = [];
+        this.log = ["Welcome to NURBS.js! If you need help visit the user manual at http://www.nurbsjs.com/manual.html"];
         this.container = document.createElement('div');
         this.container.setAttribute("id", "cmdOutContainer");
         this.lines = [];
         this.text = document.createElement('p');
         this.text.classList.add("cmdOutText");
+        this.updateHTML();
         
         this.container.appendChild(this.text);
     }
@@ -495,44 +502,78 @@ export class CommandLine{
 
 /********* Constants where the names of the dropdown menu functions exist **************/
 
-
-const fileDropDown = ["Save", "Save As", "Document Properties", "etc"];
+const fileDropDown = ["Save", "Save As", "Document Properties", "import"];
 const fileDropDownFunctions = [saveFile, saveFileAs];
 
+const testFileDropDown = ["Save", "Save As"];
 
 
 /********************* Drop down menu ******************/
 
 class DropDownItem{
 
-    name : String;
+    name : string;
     function : CallableFunction;
+    container : HTMLDivElement;
+    text : HTMLElement;
+    clss : string[];
 
-    constructor(n : String, fn : CallableFunction){
+    constructor(n : string, fn : CallableFunction, eleType : string, css? : string[]){
         this.name = n;
         this.function = fn;
-    }
-}
-
-class DropDownMenu{
-
-    name : String;
-    container : HTMLDivElement;
-    clss : String[];
-    expanded : boolean;
-    items : DropDownItem[];
-
-
-    constructor(n : string, css? : String[]){
-        this.name = n;
-        this.container = new HTMLDivElement();
+        this.container=  document.createElement("div");
+        this.text = document.createElement(eleType);
+        this.text.innerHTML = this.name;
         if(css){
             this.clss = css;
         }else{
             this.clss = [];
         }
+        for(let i = 0; i < this.clss.length; i++){
+            this.text.classList.add(this.clss[i]);
+        }
+        this.container.appendChild(this.text);
+        this.container.addEventListener("click", () => (this.function()));
+    }
+
+    getContainer() : HTMLDivElement{
+        return this.container;
+    }
+
+    getElement() : HTMLElement{
+        return this.text;
+    }
+}
+
+class DropDownMenu{
+
+    name : string;
+    container : HTMLDivElement;
+    dropDownContainer : HTMLDivElement;
+    clss : string[];
+    expanded : boolean;
+    items : DropDownItem[];
+    title : HTMLParagraphElement;
+
+
+    constructor(n : string, css : string[]){
+        this.name = n;
+        this.container = document.createElement("div");
+        this.dropDownContainer = document.createElement("div");
+        this.dropDownContainer.classList.add("dropdown-content");
+        this.container.classList.add("dropdown-button");
+        if(css){
+            this.clss = css;
+        }else{
+            this.clss = [];
+        }
+        this.title = document.createElement("p");
+        this.title.innerHTML = this.name;
+        this.title.classList.add("menuText");
+        this.title.classList.add("dropdown-button");
+        this.container.appendChild(this.title);
         this.expanded = false;
-        this.items = this.constructDropdownItems(fileDropDown, fileDropDownFunctions);
+        this.constructDropdownItems(testFileDropDown, fileDropDownFunctions, ["p", "p"], ["menuText"]);
     }
 
     
@@ -547,16 +588,32 @@ class DropDownMenu{
 
     }
 
+    getContainer() : HTMLDivElement{
+        return this.container;
+    }
+
+    getDropDownContainer() : HTMLDivElement{
+        return this.dropDownContainer;
+    }
+
     // takes a list of items that belong to the menu and their associated functions
     // should be added as parallel arrays in the order of which you want the list to appear
-    constructDropdownItems(names : String[], functions : CallableFunction[]) : DropDownItem[]{
+    constructDropdownItems(names : string[], functions : CallableFunction[], eleTypes : string[], clss? : string[]) {
         let tempItems : DropDownItem[] = [];
 
         for(let i = 0; i < names.length; i++){
-            tempItems.push(new DropDownItem(names[i], functions[i]))
+            tempItems.push(new DropDownItem(names[i], functions[i], eleTypes[i], clss));
         }
 
-        return tempItems;
+        this.items = tempItems;
+    }
+
+    constructContainer() : void{
+
+        for(let i = 0; i < this.items.length; i++){
+            this.items[i].getContainer().classList.add("dropdown-content-container");
+            this.dropDownContainer.appendChild(this.items[i].getContainer());
+        }
     }
 }
 
@@ -569,7 +626,22 @@ class MenuBar {
 
 
     constructor(){
+        const fileMenu = new DropDownMenu("File", ["dropDownMenu"]);
+        //fileMenu.constructDropdownItems(["save"], [saveFile], ["p"]);
+        fileMenu.constructContainer();
+        this.menus = []
+        this.menus.push(fileMenu);
+        this.container = document.createElement("div");
+        this.container.classList.add("dropdown");
 
+        for (let i = 0; i < this.menus.length; i++){
+            this.container.appendChild(this.menus[i].getContainer());
+            this.container.appendChild(this.menus[i].getDropDownContainer());
+        }
+    }
+
+    getContainer() : HTMLDivElement{
+        return this.container;
     }
 }
 
