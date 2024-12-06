@@ -14,19 +14,6 @@ The spline definition will be based on a Non-Uniform-Rational-Basis-Spline (NURB
 
 NURBS.js will be designed to act as a backend interface to abstract all of the nitty-gritty details behind the math that drives rendering a camera viewport to a canvas and building / storing complex geometry. There will be an API available to build your own front end on top of if you so choose. 
 
-## Why?
-
----
-
-"Why would someone try to take on building what is essentially a CAD software for the browser, when there are already so many to choose from?" you might ask. The answer to that question has a few facets, but the primary reason is that I believe there needs to be a CAD software that is fully open source. 
-
-Currently, there are many CAD softwares on the market for a variety of customers. You have the AutoDesk suite for the architects and builders, you have Fusion 360 and Rhino for the makers, you have SolidWorks for the engineers, you have softwares like Maya and Cinema4D for the motion graphics and animation artists, etc. All of those examples fall into three categories. They are either already astronomically expensive to use, they require a subscription model, or in the near term will be going to a subscription service.
-
-The primary notable exception to this is Blender, which is an excellent example of good open-source software, but targets a different market than I would like to address. The market I would like to address is the makers, simply because that is my background. 
-
-While initially, I would like to target makers, it is my intention to carefully construct the base geometry engine such that others could feasibly and with relative ease, extend the system to build systems for other potential users such as animators, contractors, architects, machinists, engineers, etc. 
-
-I fundamentally believe in open source software and want to contribute to lowering the barriers to entry for accessing the softwares required for learning many skills such as Industrial Design, Machining, Digital Art, etc. as I believe that is a critical component to making a more equitable and fair society. 
 
 ## Road Map
 
